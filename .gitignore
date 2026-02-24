@@ -20,9 +20,9 @@ sw.*
 .idea
 
 # Local env files
-.env
-.env.*
-!.env.example
+# .env
+# .env.*
+# !.env.example
 
 .wrangler
 .vercel
