@@ -4,6 +4,13 @@ import Components from "unplugin-vue-components/vite";
 import pkg from "./package.json";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const readEnv = (...keys: string[]) => {
+  for (const key of keys) {
+    const value = process.env[key];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return "";
+};
 
 // site env
 const siteConfig = {
@@ -11,7 +18,17 @@ const siteConfig = {
   siteDescription: process.env.SITE_DESCRIPTION || "一个简约的站点监测",
   siteKeywords: process.env.SITE_KEYWORDS || "站点监测,监测,监控",
   siteLogo: process.env.SITE_LOGO || "/favicon.ico",
-  siteIcp: process.env.SITE_ICP || "",
+  siteGithubLink:
+    readEnv("SITE_GITHUB_LINK", "site_github_link") || "https://github.com/imsyy/site-status",
+  siteHomeLink: readEnv("SITE_HOME_LINK", "site_home_link") || "https://www.imsyy.top/",
+  siteEmailLink: readEnv("SITE_EMAIL_LINK", "site_email_link") || "mailto:one@imsyy.top",
+  siteOwnerName: readEnv("SITE_OWNER_NAME") || "IMSYY",
+  siteOwnerLink: readEnv("SITE_OWNER_LINK") || "https://www.imsyy.top",
+  siteIcp: readEnv("SITE_ICP", "site_icp"),
+  siteMoeIcp: readEnv("SITE_MOE_ICP", "site_moe_icp"),
+  siteMoeIcpLink: readEnv("SITE_MOE_ICP_LINK", "site_moe_icp_link"),
+  siteMpsIcp: readEnv("SITE_MPS_ICP", "site_mps_icp"),
+  siteMpsIcpLink: readEnv("SITE_MPS_ICP_LINK", "site_mps_icp_link"),
   countDays: Number(process.env.COUNT_DAYS || 60),
   showLink: process.env.SHOW_LINK === "true" || true,
   platform: process.env.DEPLOYMENT_PLATFORM || "cloudflare",

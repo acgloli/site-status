@@ -32,13 +32,27 @@
       </n-p>
       <n-p depth="3">
         Copyright &copy; 2020 - {{ new Date().getFullYear() }}
-        <n-text depth="3" @click="jumpLink(linkData.home)"> IMSYY </n-text>
-        <n-text
-          v-if="siteIcp"
-          depth="3"
-          @click="jumpLink('https://beian.miit.gov.cn/')"
-        >
-          | {{ siteIcp }}
+        <n-text depth="3" @click="jumpLink(ownerLink)">
+          {{ ownerName }}
+        </n-text>
+      </n-p>
+      <n-p v-if="icpFiling || moeIcpFiling" depth="3">
+        <n-text v-if="icpFiling" depth="3" @click="jumpLink(icpLink)">
+          {{ icpFiling }}
+        </n-text>
+        <template v-if="icpFiling && moeIcpFiling"> | </template>
+        <n-text v-if="moeIcpFiling" depth="3" @click="jumpLink(moeIcpLink)">
+          {{ moeIcpFiling }}
+        </n-text>
+      </n-p>
+      <n-p v-if="mpsFiling" depth="3">
+        <n-text depth="3" class="filing-item" @click="jumpLink(mpsFilingLink)">
+          <img
+            class="mps-icon"
+            src="https://beian.mps.gov.cn/web/assets/logo01.6189a29f.png"
+            alt="公安备案图标"
+          />
+          {{ mpsFiling }}
         </n-text>
       </n-p>
     </n-flex>
@@ -47,12 +61,40 @@
 
 <script setup lang="ts">
 const { public: configPublic } = useRuntimeConfig();
-const { siteIcp, version } = configPublic;
+const {
+  siteGithubLink,
+  siteHomeLink,
+  siteEmailLink,
+  siteIcp,
+  siteMoeIcp,
+  siteMoeIcpLink,
+  siteMpsIcp,
+  siteMpsIcpLink,
+  siteOwnerName,
+  siteOwnerLink,
+  version,
+} = configPublic;
+const normalizeText = (value: unknown) =>
+  typeof value === "string" ? value.trim() : "";
+const githubLink =
+  normalizeText(siteGithubLink) || "https://github.com/imsyy/site-status";
+const homeLink = normalizeText(siteHomeLink) || "https://www.imsyy.top/";
+const emailLink = normalizeText(siteEmailLink) || "mailto:one@imsyy.top";
+const ownerName = normalizeText(siteOwnerName) || "IMSYY";
+const ownerLink = normalizeText(siteOwnerLink) || "https://www.imsyy.top/";
+const icpFiling = normalizeText(siteIcp);
+const rawMoeIcpFiling = normalizeText(siteMoeIcp);
+const moeIcpFiling =
+  rawMoeIcpFiling && rawMoeIcpFiling !== icpFiling ? rawMoeIcpFiling : "";
+const mpsFiling = normalizeText(siteMpsIcp);
+const icpLink = "https://beian.miit.gov.cn/";
+const moeIcpLink = normalizeText(siteMoeIcpLink) || icpLink;
+const mpsFilingLink = normalizeText(siteMpsIcpLink) || "https://beian.mps.gov.cn/";
 
 const linkData = {
-  github: "https://github.com/imsyy/site-status",
-  home: "https://www.imsyy.top",
-  email: "mailto:one@imsyy.top",
+  github: githubLink,
+  home: homeLink,
+  email: emailLink,
 };
 </script>
 
@@ -78,6 +120,16 @@ footer {
       &:hover {
         color: var(--normal-color);
       }
+    }
+    .filing-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mps-icon {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
     }
   }
 }
